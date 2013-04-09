@@ -4,41 +4,31 @@ var stmtTypes = { select : 's', insert: 'insert' };
 function Statement(){
     if(!(this instanceof Statement)) return new Statement();
 
-    this.type = null;
+    this.expr = "";
+    
+    this.toString = function () {
+        return this.expr;
+    };
 
-    this.fields = [];
-    this.tables = [];
+    this.select = function () {
+        
+        this.expr = "SELECT ";
 
-    this.joins = [];
+        var fnArgs = arguments;
+        Object.keys(arguments).forEach(function (val) {
+            this.expr += fnArgs[val] + ", ";
+        });
 
-    this.toString = function(){
-        if(this.type == stmtTypes.select){
-            var res = "SELECT " + this.fields[0];
+        //Remove last 2 chars
 
-            for(var i = 1; i < this.fields.length; i++)
-                res += ", "+this.fields[i];
-
-            res += " FROM "+ this.tables[0];
-
-            for(var i = 1; i < this.tables.length; i++)
-                res += ", "+this.tables[i];
-
-            return res;
-        }
-        return "SELECT 'NOT SUPPORTED';";
-    }
+        return this;
+    };
 }
 
 exports.select = function(){
     var res = new Statement();
-    res.type = stmtTypes.select;
-
-    var fnArgs = arguments;
-    Object.keys(arguments).forEach(function(val){
-        res.fields.push(fnArgs[val]); //Hack
-    });
-
-    return {from : from.bind(this, res)};
+    
+    return res.select.bind(res, arguments)();
 }
 
 function from(stmt, tbl){
@@ -51,7 +41,22 @@ function from(stmt, tbl){
     };
 }
 
-function join(stmt, tbl){}
+function join(stmt, tbl) {
+    return {
+        on: function (onExpr) {
+            stmt.joins.push({ tbl: tbl, on: onExpr });
+
+            return {
+                join: join.bind(this, stmt),
+                where: where.bind(this, stmt)
+            }
+        }
+    };
+}
+
+function where(stmt) {
+
+}
 
 exports.insert = function(){
 
