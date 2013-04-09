@@ -1,0 +1,20 @@
+{
+  "name": "sql-chain",
+  "version": "0.0.0",
+  "description": "A simplistick chainable SQL creator",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nwillems/sql-chain.git"
+  },
+  "keywords": [
+    "sql"
+  ],
+  "author": "Nwillems",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "gitHead": "c74f0903957e60d2ce46ecb35e2143e84041e67b"
+}
